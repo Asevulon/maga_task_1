@@ -1,0 +1,17 @@
+{
+    "test":
+    {
+        "ampl":1,
+        "freq":5,
+        "phase":0,
+        "length":1,
+        "sample_rate":1000
+    },
+    "bpsk":
+    {
+        "bits":"11001001",
+        "fc":3,
+        "Tb":1,
+        "fs":100
+    }
+}

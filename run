@@ -1,0 +1,20 @@
+#!/bin/bash
+
+PLOT_PATH="plot"
+PLOT_DATA_PATH="data"
+
+clear()
+{
+    rm -rf $1
+    mkdir $1
+}
+
+cd build
+cmake ..
+cd ..
+cmake --build build
+
+clear $PLOT_PATH
+clear $PLOT_DATA_PATH
+
+build/Task1
