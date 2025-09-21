@@ -1,3 +1,5 @@
+# Build
+
 ```
 git submodule init
 sudo apt install gnuplot
