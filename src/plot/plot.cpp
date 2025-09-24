@@ -28,7 +28,7 @@ std::vector<Point> merge(const std::vector<double> &x, const std::vector<double>
 
 void print_plot_data(const std::vector<Point> &src, const GnuplotParams &p)
 {
-    auto path = safe_path(p.data_dir, p.title + p.data_ext);
+    auto path = safe_path(p.data_dir, p.title);
     print_plot_data(src, path);
 }
 
@@ -63,7 +63,7 @@ int draw_plot(const GnuplotLineParams &p)
 
 std::string GnuplotParams::cmd_line() const
 {
-    string data_name = title + data_ext;
+    string data_name = title;
     string out_name = title + out_ext;
 
     string data_path = safe_path(data_dir, data_name);

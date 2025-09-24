@@ -4,4 +4,4 @@
 
 #include "modulation/params.h"
 
-std::vector<double> generate_bfsk(const BfskParams p);
+std::vector<double> generate_ask2(const Ask2Params p);

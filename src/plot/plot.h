@@ -30,7 +30,6 @@ public:
     string height = "900";
     string x_label = "X";
     string y_label = "Y";
-    string data_ext = ".txt";
     string out_ext = ".png";
 
     virtual std::string cmd_line() const;

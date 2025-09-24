@@ -72,8 +72,8 @@ endif()
 target_include_directories(${EXECUTABLE_NAME} PRIVATE ${SOURCE_DIR})
 
 # Вывод отладочной информации
-message(STATUS "Project: ${PROJECT_NAME}")
-message(STATUS "Source dir: ${SOURCE_DIR}")
-message(STATUS "JSON lib dir: ${NLOHMANN_JSON_DIR}")
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "Found sources: ${SOURCES}")
+# message(STATUS "Project: ${PROJECT_NAME}")
+# message(STATUS "Source dir: ${SOURCE_DIR}")
+# message(STATUS "JSON lib dir: ${NLOHMANN_JSON_DIR}")
+# message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+# message(STATUS "Found sources: ${SOURCES}")

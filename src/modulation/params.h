@@ -2,21 +2,51 @@
 
 #include "config/config.h"
 
-class BpskParams
+class ModulationParams
 {
 public:
-    BpskParams(const Config &conf)
+    ModulationParams(const Config &conf)
     {
-        auto bpsk = conf["bpsk"];
+        auto mod = conf["modulation"];
 
-        bits = bpsk["bits"].get<std::string>();
-        fc = bpsk["fc"].get<double>();
-        Tb = bpsk["Tb"].get<double>();
-        fs = bpsk["fs"].get<double>();
+        bits = mod["bits"].get<std::string>();
+        fc = mod["fc"].get<double>();
+        Tb = mod["Tb"].get<double>();
+        fs = mod["fs"].get<double>();
     }
 
     std::string bits;
     double fc = 0;
     double Tb = 0;
     double fs = 0;
+};
+
+class BpskParams : public ModulationParams
+{
+public:
+    BpskParams(const Config &conf)
+        : ModulationParams(conf) {}
+};
+
+class BfskParams : public ModulationParams
+{
+public:
+    BfskParams(const Config &conf)
+        : ModulationParams(conf) {}
+};
+
+class Ask2Params : public ModulationParams
+{
+public:
+    Ask2Params(const Config &conf)
+        : ModulationParams(conf)
+    {
+        auto ask2 = conf["modulation"]["ask2"];
+
+        A0 = ask2["A0"].get<double>();
+        A1 = ask2["A1"].get<double>();
+    }
+
+    double A0 = 0;
+    double A1 = 0;
 };

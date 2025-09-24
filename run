@@ -7,15 +7,14 @@ BUILD_PATH="build"
 BUILD_TYPE="Release"
 PARALLEL=4
 
+LINE="==============================================="
 
-clear()
-{
+clear(){
     rm -rf $1
     mkdir $1
 }
 
-build()
-{
+build(){
     cmake \
         -S . \
         -B $BUILD_PATH \
@@ -28,9 +27,20 @@ build()
         --parallel $PARALLEL
 }
 
+run(){
+    TARGET=$1
+    echo -e "\nRunning target ${TARGET}\n"
+    echo $LINE
+    echo ""
+    $TARGET
+    echo ""
+    echo $LINE
+    echo -e "\nDone\n"
+}
+
 build
 
 clear $PLOT_PATH
 clear $PLOT_DATA_PATH
 
-build/Task1
+run build/Task1
