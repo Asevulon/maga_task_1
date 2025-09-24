@@ -3,16 +3,32 @@
 PLOT_PATH="plot"
 PLOT_DATA_PATH="data"
 
+BUILD_PATH="build"
+BUILD_TYPE="Release"
+PARALLEL=4
+
+
 clear()
 {
     rm -rf $1
     mkdir $1
 }
 
-cd build
-cmake ..
-cd ..
-cmake --build build
+build()
+{
+    cmake \
+        -S . \
+        -B $BUILD_PATH \
+        -DCMAKE_C_COMPILER=gcc-13 \
+        -DCMAKE_CXX_COMPILER=g++-13 \
+        -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    cmake \
+        --build $BUILD_PATH \
+        --parallel $PARALLEL
+}
+
+build
 
 clear $PLOT_PATH
 clear $PLOT_DATA_PATH

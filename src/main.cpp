@@ -22,5 +22,14 @@ int main()
     keys = generate_bpsk_keys(conf);
     p.title = "bpsk";
     draw_plot(keys, signal, p);
+
+    auto c_signal = generate_bpsk_cmplx(conf);
+    auto re = cmplx_re(c_signal);
+    auto im = cmplx_im(c_signal);
+    GnuplotLineParams lp;
+    lp.title = "cmplx bpsk";
+    lp.lines.emplace_back("re", keys, re);
+    // lp.lines.emplace_back("im", keys, im);
+    draw_plot(lp);
     return 0;
 }
