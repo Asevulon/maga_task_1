@@ -1,12 +1,4 @@
 {
-    "test":
-    {
-        "ampl":1,
-        "freq":5,
-        "phase":0,
-        "length":1,
-        "sample_rate":1000
-    },
     "modulation":
     {
         "bits":"11001001",
@@ -22,5 +14,10 @@
     "noise":
     {
         "level": 0.1
+    },
+    "target_signal":
+    {
+        "begin":0.5,
+        "end":1.5
     }
 }

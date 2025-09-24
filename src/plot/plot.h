@@ -1,49 +1,6 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
-struct Point
-{
-    double x = 0;
-    double y = 0;
-};
-
-struct GnuplotLine
-{
-    std::string name = "default_name";
-    std::vector<Point> data;
-    GnuplotLine() {}
-    GnuplotLine(const std::string &name, const std::vector<Point> &src)
-        : name(name), data(src) {}
-    GnuplotLine(const std::string &name, const std::vector<double> x, const std::vector<double> &y);
-};
-
-class GnuplotParams
-{
-public:
-    using string = std::string;
-    string data_dir = "data/";
-    string out_dir = "plot/";
-    string title = "title";
-    string width = "1280";
-    string height = "900";
-    string x_label = "X";
-    string y_label = "Y";
-    string out_ext = ".png";
-
-    virtual std::string cmd_line() const;
-};
-
-class GnuplotLineParams : public GnuplotParams
-{
-protected:
-    std::vector<string> collect_names() const;
-
-public:
-    std::vector<GnuplotLine> lines;
-    std::string cmd_line() const override;
-};
+#include "plot/params.h"
 
 std::vector<Point> merge(const std::vector<double> &x, const std::vector<double> &y);
 

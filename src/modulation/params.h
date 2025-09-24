@@ -5,6 +5,7 @@
 class ModulationParams
 {
 public:
+    ModulationParams() {}
     ModulationParams(const Config &conf)
     {
         auto mod = conf["modulation"];
@@ -24,6 +25,7 @@ public:
 class BpskParams : public ModulationParams
 {
 public:
+    BpskParams() {}
     BpskParams(const Config &conf)
         : ModulationParams(conf) {}
 };
@@ -31,6 +33,7 @@ public:
 class BfskParams : public ModulationParams
 {
 public:
+    BfskParams() {}
     BfskParams(const Config &conf)
         : ModulationParams(conf) {}
 };
@@ -38,6 +41,7 @@ public:
 class Ask2Params : public ModulationParams
 {
 public:
+    Ask2Params() {}
     Ask2Params(const Config &conf)
         : ModulationParams(conf)
     {
