@@ -11,13 +11,15 @@
             "A1":1
         }
     },
-    "noise":
+    "source":
     {
-        "level": 0.1
+        "mod":"ask2",
+        "noise":10
     },
-    "target_signal":
+    "target":
     {
         "begin":0.5,
-        "end":1.5
+        "end":5.5,
+        "noise":-10
     }
 }

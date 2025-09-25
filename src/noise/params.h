@@ -1,16 +1,11 @@
 #pragma once
 
-#include "config/config.h"
+#include "scenario/params.h"
 
-class NoiseParams
+class NoiseParams : public SignalParams
 {
 public:
+    NoiseParams() {}
     NoiseParams(const Config &conf)
-    {
-        auto noise = conf["noise"];
-
-        level = noise["level"];
-    }
-
-    double level = 0;
+        : SignalParams(conf) {}
 };

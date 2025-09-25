@@ -20,7 +20,8 @@ std::vector<double> apply_white_noise(std::vector<double> &target, const NoisePa
     auto n = generate_white_noise(size);
     auto en = energy(n);
     auto es = energy(target);
-    double betta = sqrt(p.level * es / en);
+    double noise = 1. / convert_db(p.noise);
+    double betta = sqrt(noise * es / en);
     std::vector<double> res;
     res.reserve(size);
     for (uint64_t i = 0; i < size; ++i)

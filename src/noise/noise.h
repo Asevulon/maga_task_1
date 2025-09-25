@@ -16,3 +16,8 @@ inline double single_white_noise()
     res /= 12;
     return res;
 }
+
+inline double convert_db(double val)
+{
+    return pow(10, val / 10);
+}
