@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "config/config.h"
-#include "scenario/generation.h"
+#include "scenario/scenario.h"
 
 using std::cout;
 using std::endl;
@@ -13,7 +13,7 @@ int main()
         auto conf = load_config("config.json");
         cout << "Config: " << conf << endl;
 
-        generation(conf);
+        correlation_scenario(conf);
     }
     catch (const std::exception &e)
     {

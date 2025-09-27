@@ -38,6 +38,10 @@ inline cmplx operator*(const cmplx &x, const cmplx &y)
     return cmplx(x.re * y.re - x.im * y.im,
                  x.re * y.im + y.re * x.im);
 }
+inline cmplx operator*(const cmplx &x, const double y)
+{
+    return cmplx(x.re * y, x.im * y);
+}
 inline cmplx operator/(const cmplx &x, const cmplx &y)
 {
     cmplx z;

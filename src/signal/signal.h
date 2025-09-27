@@ -28,3 +28,10 @@ inline container cut(container &src, const CuttingParams p)
     }
     return res;
 }
+
+template <typename Container>
+inline auto zero_border(Container &&src, int idx)
+{
+    using T = typename std::decay_t<Container>::value_type;
+    return ((idx >= 0) && (idx < src.size())) ? src[idx] : T{};
+}

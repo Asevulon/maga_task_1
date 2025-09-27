@@ -20,13 +20,13 @@ std::vector<double> modulation(const Config &conf)
     SourceParams p = conf;
 
     if (p.mod == "bpsk")
-        return generate_bpsk(conf);
+        return generate_bpsk_double(conf);
 
     if (p.mod == "bfsk")
-        return generate_bfsk(conf);
+        return generate_bfsk_double(conf);
 
     if (p.mod == "ask2")
-        return generate_ask2(conf);
+        return generate_ask2_double(conf);
 
     throw std::runtime_error("unknown modulation mode");
 }

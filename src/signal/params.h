@@ -6,8 +6,16 @@
 class CuttingParams : public ModulationParams, public TargetParams
 {
 public:
-    CuttingParams() {}
-    CuttingParams(const Config &conf)
-        : ModulationParams(conf),
-          TargetParams(conf) {}
+  CuttingParams() {}
+  CuttingParams(const Config &conf)
+      : ModulationParams(conf),
+        TargetParams(conf) {}
+};
+
+class CorrelationKeyParams : public ModulationParams, public TargetParams
+{
+public:
+  CorrelationKeyParams() {}
+  CorrelationKeyParams(const Config &conf)
+      : ModulationParams(conf) {}
 };
