@@ -29,9 +29,20 @@ inline container cut(container &src, const CuttingParams p)
     return res;
 }
 
-template <typename Container>
-inline auto zero_border(Container &&src, int idx)
+template <typename T>
+inline size_t max_id(const std::vector<T> &src)
 {
-    using T = typename std::decay_t<Container>::value_type;
-    return ((idx >= 0) && (idx < src.size())) ? src[idx] : T{};
+    size_t id = 0;
+    size_t size = src.size();
+    for (int i = 1; i < size; ++i)
+    {
+        if (src[id] < src[i])
+            id = i;
+    }
+    return id;
+}
+
+inline double milliseconds(double val)
+{
+    return val * 1000;
 }

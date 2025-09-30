@@ -2,9 +2,9 @@
     "modulation":
     {
         "bits":"11001001",
-        "fc":2,
-        "fs":100,
-        "Tb":1,
+        "fc":5000,
+        "fs":10000,
+        "Tb":0.01,
         "ask2":
         {
             "A0":0.5,
@@ -13,13 +13,13 @@
     },
     "source":
     {
-        "mod":"ask2",
+        "mod":"bpsk",
         "noise":10
     },
     "target":
     {
-        "begin":0.5,
-        "end":5.5,
+        "begin":0.04,
+        "end":0.06,
         "noise":0
     }
 }

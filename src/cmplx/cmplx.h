@@ -1,6 +1,7 @@
 #pragma once
 #include <cmath>
 #include <vector>
+#include <cstdint>
 
 class cmplx
 {
@@ -79,11 +80,15 @@ inline double abs(const cmplx &x)
 {
     return sqrt(x.re * x.re + x.im * x.im);
 }
+inline cmplx conj(const cmplx &x)
+{
+    return cmplx(x.re, -x.im);
+}
 
 void fourea(std::vector<cmplx> &F, double is);
 
 template <template <typename...> typename container_type>
-container_type<double> cmplx_re(container_type<cmplx> &src)
+container_type<double> cmplx_re(const container_type<cmplx> &src)
 {
     container_type<double> res;
     for (auto &item : src)
@@ -91,10 +96,37 @@ container_type<double> cmplx_re(container_type<cmplx> &src)
     return res;
 }
 template <template <typename...> typename container_type>
-container_type<double> cmplx_im(container_type<cmplx> &src)
+container_type<double> cmplx_im(const container_type<cmplx> &src)
 {
     container_type<double> res;
     for (auto &item : src)
         res.emplace_back(item.im);
+    return res;
+}
+
+inline std::vector<cmplx> merge_cmplx(const std::vector<double> &re, const std::vector<double> &im)
+{
+    std::vector<cmplx> res;
+    size_t size = std::min(re.size(), im.size());
+    res.reserve(size);
+    for (uint64_t i = 0; i < size; ++i)
+        res.emplace_back(re[i], im[i]);
+    return res;
+}
+
+inline double energy_cmplx(const std::vector<cmplx> &target)
+{
+    double res = 0;
+    for (const auto &x : target)
+        res += x.re * x.re + x.im * x.im;
+    return res;
+}
+
+inline std::vector<double> abs(const std::vector<cmplx> &src)
+{
+    std::vector<double> res;
+    res.reserve(src.size());
+    for (const auto &x : src)
+        res.emplace_back(abs(x));
     return res;
 }

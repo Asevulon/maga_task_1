@@ -13,6 +13,7 @@ set xlabel x_label
 set ylabel y_label
 set grid
 set key outside top left
+set termoption noenhanced
 
 number_of_files = words(datafile)
 

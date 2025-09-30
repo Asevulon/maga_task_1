@@ -30,3 +30,19 @@ std::vector<double> modulation(const Config &conf)
 
     throw std::runtime_error("unknown modulation mode");
 }
+
+std::vector<cmplx> modulation_cmplx(const Config &conf)
+{
+    SourceParams p = conf;
+
+    if (p.mod == "bpsk")
+        return generate_bpsk_cmplx(conf);
+
+    if (p.mod == "bfsk")
+        return generate_bfsk_cmplx(conf);
+
+    if (p.mod == "ask2")
+        return generate_ask2_cmplx(conf);
+
+    throw std::runtime_error("unknown modulation mode");
+}

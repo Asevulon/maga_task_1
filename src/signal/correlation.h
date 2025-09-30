@@ -3,47 +3,48 @@
 #include <vector>
 
 #include "signal/params.h"
+#include "cmplx/cmplx.h"
 
-template <typename T>
-std::vector<T> correlation(const std::vector<T> &x, const std::vector<T> &y)
+inline std::vector<cmplx> correlation(const std::vector<cmplx> &x, const std::vector<cmplx> &y)
 {
-    if (x.empty() || y.empty())
-        return {};
+    int Nx = x.size();
+    int Ny = y.size();
+    int Ncorr = Nx + Ny - 1;
 
-    int N = x.size();
-    int M = y.size();
-    std::vector<T> res(N + M - 1);
+    std::vector<cmplx> result(Ncorr, cmplx());
 
-    int left = -(M - 1);
-    for (int k = left; k < N; ++k)
+    for (int i = 0; i < Ncorr; ++i)
     {
-        T sum = T{};
-        for (int n = 0; n < M; ++n)
-            sum += zero_border(x, k + n) * y[n];
-        res[k - left] = sum;
+        int k = i - Ny + 1;
+
+        cmplx sum;
+
+        // Суммируем по всем n, где оба индекса в пределах
+        for (int n = 0; n < Ny; ++n)
+        {
+            int xn_index = n + k; // индекс в x: n + k
+
+            if (xn_index >= 0 && xn_index < Nx)
+            {
+                sum = sum + x[xn_index] * conj(y[n]);
+            }
+        }
+
+        result[i] = sum;
     }
 
-    T norma = std::sqrt(energy(x) * energy(y));
-    for (auto &item : res)
-        item /= norma;
-
-    return res;
+    return result;
 }
 
-std::vector<double> generate_correlation_keys(const CorrelationKeyParams &p)
+inline std::vector<double> correlation_keys(size_t x, size_t y, double fs, double begin)
 {
+    size_t size = x + y - 1;
+    double dt = 1. / fs;
     std::vector<double> res;
-
-    double dt = 1. / p.fs;
-    double left = -p.begin + dt;
-    std::cout << left;
-    size_t size = p.Tb * p.bits.size() * p.fs;
-
-    res.resize(size);
-    for (uint64_t i = 0; i < size; ++i)
+    res.reserve(size);
+    for (size_t i = 0; i < size; ++i)
     {
-        res[i] = left + i * dt;
+        res.emplace_back(begin + i * dt);
     }
-
     return res;
 }

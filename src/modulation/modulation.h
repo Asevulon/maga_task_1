@@ -7,3 +7,4 @@
 std::vector<double> generate_modulation_keys(const ModulationParams p);
 
 std::vector<double> modulation(const Config &conf);
+std::vector<cmplx> modulation_cmplx(const Config &conf);
