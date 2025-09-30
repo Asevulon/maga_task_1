@@ -46,3 +46,24 @@ std::vector<cmplx> modulation_cmplx(const Config &conf)
 
     throw std::runtime_error("unknown modulation mode");
 }
+
+std::vector<cmplx> modulation_exp(
+    const std::string &mod,
+    const double &Tb,
+    const double &fs,
+    const double &fc,
+    const double &A0,
+    const double &A1,
+    const std::string &bits)
+{
+    if (mod == "bpsk")
+        return generate_bpsk<cmplx>(Tb, fs, fc, bits, make_signal_cmplx);
+
+    if (mod == "bfsk")
+        return generate_bfsk<cmplx>(Tb, fs, fc, bits, make_signal_cmplx);
+
+    if (mod == "ask2")
+        return generate_ask2<cmplx>(Tb, fs, fc, A0, A1, bits, make_signal_cmplx);
+
+    throw std::runtime_error("unknown modulation mode");
+}

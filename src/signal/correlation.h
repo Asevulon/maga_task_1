@@ -48,3 +48,11 @@ inline std::vector<double> correlation_keys(size_t x, size_t y, double fs, doubl
     }
     return res;
 }
+
+inline double correlation_key(
+    const double &dt,
+    const double &begin,
+    const size_t &idx)
+{
+    return begin + idx * dt;
+}

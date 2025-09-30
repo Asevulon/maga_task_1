@@ -9,6 +9,7 @@
 std::vector<double> generate_white_noise(size_t size);
 std::vector<double> apply_white_noise(std::vector<double> &target, const NoiseParams p);
 std::vector<cmplx> apply_white_noise(std::vector<cmplx> &target, const NoiseParams &p);
+void apply_white_noise_raw(std::vector<cmplx> &target, const double &noise);
 
 inline double single_white_noise()
 {

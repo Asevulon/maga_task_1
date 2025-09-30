@@ -30,6 +30,22 @@ inline container cut(container &src, const CuttingParams p)
 }
 
 template <typename T>
+inline std::vector<T> cut(
+    const std::vector<T> &src,
+    const double &Tb,
+    const double &fs,
+    const size_t &bits_len,
+    const double &begin,
+    const double &end)
+{
+    double total_time = Tb * bits_len;
+    size_t size = total_time * fs;
+    size_t begin_idx = begin / total_time * size;
+    size_t end_idx = end / total_time * size;
+    return std::vector<T>(src.begin() + begin_idx, src.begin() + end_idx);
+}
+
+template <typename T>
 inline size_t max_id(const std::vector<T> &src)
 {
     size_t id = 0;

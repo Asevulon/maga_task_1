@@ -7,23 +7,28 @@
 #include "modulation/make_signal.h"
 
 template <typename T>
-std::vector<T> generate_bfsk(const BfskParams &p, const std::function<T(double)> &make_signal)
+std::vector<T> generate_bfsk(
+    double Tb,
+    double fs,
+    double fc,
+    const std::string &bits,
+    const std::function<T(double)> &make_signal)
 {
     std::vector<T> res;
 
-    size_t size_per_bit = p.Tb * p.fs;
-    size_t size = p.bits.size() * size_per_bit;
+    size_t size_per_bit = Tb * fs;
+    size_t size = bits.size() * size_per_bit;
 
     res.reserve(size);
 
-    double df = 1. / (2. * p.Tb);
-    double p_step_0 = Pi2 * (p.fc - df) / p.fs;
-    double p_step_1 = Pi2 * (p.fc + df) / p.fs;
+    double df = 1. / (2. * Tb);
+    double p_step_0 = Pi2 * (fc - df) / fs;
+    double p_step_1 = Pi2 * (fc + df) / fs;
 
     double phase = 0;
     double d_phase = 0;
 
-    for (const auto &c : p.bits)
+    for (const auto &c : bits)
     {
         d_phase = (c - '0') ? p_step_1 : p_step_0;
         for (uint64_t i = 0; i < size_per_bit; ++i)
@@ -37,11 +42,16 @@ std::vector<T> generate_bfsk(const BfskParams &p, const std::function<T(double)>
     return res;
 }
 
-inline std::vector<double> generate_bfsk_double(const BfskParams p)
+template <typename T>
+inline std::vector<T> generate_bfsk(const BfskParams &p, const std::function<T(double)> &make_signal)
+{
+    return generate_bfsk<T>(p.Tb, p.fs, p.fc, p.bits, make_signal);
+}
+inline std::vector<double> generate_bfsk_double(const BfskParams &p)
 {
     return generate_bfsk<double>(p, make_signal_double);
 }
-inline std::vector<cmplx> generate_bfsk_cmplx(const BfskParams p)
+inline std::vector<cmplx> generate_bfsk_cmplx(const BfskParams &p)
 {
     return generate_bfsk<cmplx>(p, make_signal_cmplx);
 }

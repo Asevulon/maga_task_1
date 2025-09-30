@@ -46,3 +46,20 @@ std::vector<cmplx> apply_white_noise(std::vector<cmplx> &target, const NoisePara
         res.emplace_back(target[i] + (n[i] * betta));
     return res;
 }
+
+void apply_white_noise_raw(std::vector<cmplx> &target, const double &pn)
+{
+    size_t size = target.size();
+    std::vector<cmplx> n;
+    n.reserve(size);
+    for (size_t i = 0; i < size; ++i)
+    {
+        n.emplace_back(single_white_noise(), single_white_noise());
+    }
+    auto en = energy_cmplx(n);
+    auto es = energy_cmplx(target);
+    double noise = 1. / convert_db(pn);
+    double betta = sqrt(noise * es / en);
+    for (size_t i = 0; i < size; ++i)
+        target[i] = target[i] + n[i] * betta;
+}

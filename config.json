@@ -13,7 +13,7 @@
     },
     "source":
     {
-        "mod":"bpsk",
+        "mod":"ask2",
         "noise":10
     },
     "target":
@@ -21,5 +21,14 @@
         "begin":0.04,
         "end":0.06,
         "noise":0
-    }
+    },
+    "experiment":
+    {
+        "noise_max":10,
+        "noise_min":-10,
+        "noise_levels":100,
+        "experiment_per_level":100,
+        "bits_len":10,
+        "threads":8
+    }    
 }

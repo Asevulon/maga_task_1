@@ -45,3 +45,25 @@ public:
     double begin = 0;
     double end = 0;
 };
+
+class ExperimentParams
+{
+public:
+    ExperimentParams() {};
+    ExperimentParams(const Config &conf)
+    {
+        auto exp = conf["experiment"];
+        noise_max = exp["noise_max"];
+        noise_min = exp["noise_min"];
+        noise_levels = exp["noise_levels"];
+        experiments_per_level = exp["experiments_per_level"];
+        bits_len = exp["bits_len"];
+        threads = exp["threads"];
+    }
+    double noise_max = 0;
+    double noise_min = 0;
+    uint64_t noise_levels = 0;
+    uint64_t experiments_per_level = 0;
+    size_t bits_len = 0;
+    uint64_t threads = 0;
+};

@@ -7,24 +7,31 @@
 #include "general/const.h"
 
 template <typename T>
-std::vector<T> generate_ask2(const Ask2Params &p, const std::function<T(double)> &make_signal)
+std::vector<T> generate_ask2(
+    double Tb,
+    double fs,
+    double fc,
+    double A0,
+    double A1,
+    const std::string &bits,
+    const std::function<T(double)> &make_signal)
 {
     std::vector<T> res;
 
-    size_t size_per_bit = p.Tb * p.fs;
-    size_t size = p.bits.size() * size_per_bit;
+    size_t size_per_bit = Tb * fs;
+    size_t size = bits.size() * size_per_bit;
 
     res.reserve(size);
 
-    double df = 1. / (2. * p.Tb);
-    double p_step = Pi2 * p.fc / p.fs;
+    double df = 1. / (2. * Tb);
+    double p_step = Pi2 * fc / fs;
 
     double phase = 0;
     double A = 0;
 
-    for (const auto &c : p.bits)
+    for (const auto &c : bits)
     {
-        A = (c - '0') ? p.A1 : p.A0;
+        A = (c - '0') ? A1 : A0;
         for (uint64_t i = 0; i < size_per_bit; ++i)
         {
             if (phase > Pi2)
@@ -36,6 +43,11 @@ std::vector<T> generate_ask2(const Ask2Params &p, const std::function<T(double)>
     return res;
 }
 
+template <typename T>
+inline std::vector<T> generate_ask2(const Ask2Params &p, const std::function<T(double)> &make_signal)
+{
+    return generate_ask2<T>(p.Tb, p.fs, p.fc, p.A0, p.A1, p.bits, make_signal);
+}
 inline std::vector<double> generate_ask2_double(const Ask2Params p)
 {
     return generate_ask2<double>(p, make_signal_double);
