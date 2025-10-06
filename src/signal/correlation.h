@@ -56,3 +56,16 @@ inline double correlation_key(
 {
     return begin + idx * dt;
 }
+
+// request x.size() == y.size() == next_power_of_two(x.size() + y.size() - 1)
+inline void correlation_fft(std::vector<cmplx> &x, std::vector<cmplx> &y, std::vector<cmplx> &r)
+{
+    fourea(x, -1);
+    fourea(y, -1);
+    size_t size = x.size();
+    for (size_t i = 0; i < size; ++i)
+    {
+        r[i] = conj(x[i]) * y[i];
+    }
+    fourea(r, 1);
+}

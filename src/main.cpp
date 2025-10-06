@@ -6,14 +6,16 @@
 using std::cout;
 using std::endl;
 
-int main()
+int main(int argc, char *argv[])
 {
     try
     {
+        std::cout << YELLOW << "Running program: " << argv[0] << RESET << std::endl;
+
         auto conf = load_config("config.json");
         cout << "Config: " << conf << endl;
 
-        correlation_scenario(conf);
+        experiment(conf);
     }
     catch (const std::exception &e)
     {

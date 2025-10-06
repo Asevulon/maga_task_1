@@ -1,11 +1,21 @@
 #!/bin/bash
 
+set -euo pipefail
+
 PLOT_PATH="plot"
 PLOT_DATA_PATH="data"
 
-BUILD_PATH="build"
+
 BUILD_TYPE="Release"
+if [[ $# -gt 0 ]]; then
+    BUILD_TYPE="$1"
+fi
+
+BUILD_PATH="build"
+BUILD_PATH_TYPED="${BUILD_PATH}/${BUILD_TYPE}"
 PARALLEL=4
+
+
 
 LINE="==============================================="
 
@@ -17,13 +27,14 @@ clear(){
 build(){
     cmake \
         -S . \
-        -B $BUILD_PATH \
+        -B $BUILD_PATH_TYPED \
         -DCMAKE_C_COMPILER=gcc-13 \
         -DCMAKE_CXX_COMPILER=g++-13 \
         -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        
 
     cmake \
-        --build $BUILD_PATH \
+        --build $BUILD_PATH_TYPED \
         --parallel $PARALLEL
 }
 
@@ -43,4 +54,4 @@ build
 clear $PLOT_PATH
 clear $PLOT_DATA_PATH
 
-run build/Task1
+run "${BUILD_PATH_TYPED}/Task1"

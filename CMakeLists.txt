@@ -18,7 +18,7 @@ set(NLOHMANN_JSON_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/nlohmann_json")
 set(EXECUTABLE_NAME "${PROJECT_NAME}")
 
 # Тип сборки
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}")
 
 # Предупреждения как ошибки
 set(WARNINGS_AS_ERRORS OFF)

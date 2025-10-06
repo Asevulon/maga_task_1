@@ -56,7 +56,7 @@ public:
         noise_max = exp["noise_max"];
         noise_min = exp["noise_min"];
         noise_levels = exp["noise_levels"];
-        experiments_per_level = exp["experiments_per_level"];
+        experiments_per_level = exp["experiment_per_level"];
         bits_len = exp["bits_len"];
         threads = exp["threads"];
     }

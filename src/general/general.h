@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
+#include <fstream>
 
 inline int exec(const std::string cmd)
 {
@@ -50,4 +51,37 @@ inline std::vector<double> autokeys(T &&src)
     for (uint64_t i = 0; i < keys.size(); ++i)
         keys[i] = i;
     return keys;
+}
+
+inline uint64_t next_power_of_two(uint64_t v)
+{
+    if (v == 0)
+        return 1;
+    v--;
+    v |= v >> 1;
+    v |= v >> 2;
+    v |= v >> 4;
+    v |= v >> 8;
+    v |= v >> 16;
+    v |= v >> 32;
+    return v + 1;
+}
+
+template <typename T>
+inline void zero_extention(std::vector<T> &target, size_t size)
+{
+    size_t cur = target.size();
+    target.reserve(size);
+    for (size_t i{cur}; i < size; ++i)
+        target.emplace_back(T{});
+}
+
+#define nprint_vector(src) print_vector(src, #src)
+template <typename T>
+inline void print_vector(const std::vector<T> &src, const std::string &path)
+{
+    std::ofstream file(path);
+    for (auto &item : src)
+        file << item << std::endl;
+    file.close();
 }
