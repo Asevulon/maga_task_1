@@ -13,7 +13,7 @@
     },
     "source":
     {
-        "mod":"bpsk",
+        "mod":"ask2",
         "noise":10
     },
     "target":
