@@ -53,6 +53,18 @@ inline std::vector<double> autokeys(T &&src)
     return keys;
 }
 
+inline std::vector<double> ranged_keys(const size_t &steps, const double &begin, const double &end)
+{
+    std::vector<double> res;
+    res.resize(steps);
+    double step = (end - begin) / double(steps - 1);
+    for (size_t i = 0; i < steps; ++i)
+    {
+        res[i] = begin + step * i;
+    }
+    return res;
+}
+
 inline uint64_t next_power_of_two(uint64_t v)
 {
     if (v == 0)

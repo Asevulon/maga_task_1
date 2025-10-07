@@ -137,7 +137,7 @@ void experiment(const Config &conf)
 
     nprint_vector(exp_result);
 
-    auto exp_result_l = nline(autokeys(exp_result), exp_result);
+    auto exp_result_l = nline(ranged_keys(exp_result.size(), exp_p.noise_min, exp_p.noise_max), exp_result);
 
     GnuplotLineParams p;
     p.title = "experiment result: " + src_p.mod;
