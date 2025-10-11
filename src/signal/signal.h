@@ -16,9 +16,8 @@ inline container cut(container &src, const CuttingParams p)
 {
     container res{};
 
-    size_t size = p.bits.size() * p.Tb * p.fs;
-
-    double total_time = p.Tb * p.bits.size();
+    double total_time = p.bits / p.Tb;
+    size_t size = total_time * p.fs;
     size_t begin = p.begin / total_time * size;
     size_t end = p.end / total_time * size;
 
@@ -38,7 +37,7 @@ inline std::vector<T> cut(
     const double &begin,
     const double &end)
 {
-    double total_time = Tb * bits_len;
+    double total_time = bits_len / Tb;
     size_t size = total_time * fs;
     size_t begin_idx = begin / total_time * size;
     size_t end_idx = end / total_time * size;
@@ -54,7 +53,7 @@ inline size_t apply_cut(
     const double &begin,
     const double &end)
 {
-    double total_time = Tb * bits_len;
+    double total_time = bits_len / Tb;
     size_t size = total_time * fs;
     size_t begin_idx = begin / total_time * size;
     size_t end_idx = end / total_time * size;

@@ -6,6 +6,7 @@
 #include "cmplx/cmplx.h"
 #include "modulation/params.h"
 #include "general/const.h"
+#include "general/general.h"
 #include "modulation/make_signal.h"
 
 template <typename T>
@@ -17,8 +18,7 @@ std::vector<T> &apply_bpsk(
     const std::string &bits,
     const std::function<T(double)> &make_signal)
 {
-
-    size_t size_per_bit = Tb * fs;
+    double size_per_bit = fs / Tb;
     size_t size = bits.size() * size_per_bit;
 
     if (res.size() < size)
@@ -62,7 +62,7 @@ inline std::vector<T> generate_bpsk(
 template <typename T>
 inline std::vector<T> generate_bpsk(const BpskParams &p, const std::function<T(double)> &make_signal)
 {
-    return generate_bpsk<T>(p.Tb, p.fs, p.fc, p.bits, make_signal);
+    return generate_bpsk<T>(p.Tb, p.fs, p.fc, random_bits(create_random(1).front(), p.bits), make_signal);
 }
 inline std::vector<double> generate_bpsk_double(const BpskParams p)
 {

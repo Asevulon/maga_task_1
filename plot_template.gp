@@ -13,9 +13,10 @@ set xlabel x_label
 set ylabel y_label
 set grid
 set key outside top left
-set termoption noenhanced
-set offsets 0, 0, 0.1, 0.1 
+set offsets 0, 0, 0.1, 0.1
 
-number_of_files = words(datafile)
+stats datafile nooutput
+ncols = STATS_columns
+nlines = int(ncols / 2)
 
-plot for [i=1:number_of_files] word(datafile, i) using 1:2 with lines title word(datafile, i)
+plot for [i=1:nlines] datafile using (column(2*i-1)):(column(2*i)) with lines title columnheader(2*i)

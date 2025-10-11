@@ -16,13 +16,13 @@ std::vector<T> &apply_bfsk(
     const std::function<T(double)> &make_signal)
 {
 
-    size_t size_per_bit = Tb * fs;
+    double size_per_bit = fs / Tb;
     size_t size = bits.size() * size_per_bit;
 
     if (res.size() < size)
         res.resize(size);
 
-    double df = 1. / (2. * Tb);
+    double df = Tb / 2.;
     double p_step_0 = Pi2 * (fc - df) / fs;
     double p_step_1 = Pi2 * (fc + df) / fs;
 
@@ -64,7 +64,7 @@ inline std::vector<T> generate_bfsk(
 template <typename T>
 inline std::vector<T> generate_bfsk(const BfskParams &p, const std::function<T(double)> &make_signal)
 {
-    return generate_bfsk<T>(p.Tb, p.fs, p.fc, p.bits, make_signal);
+    return generate_bfsk<T>(p.Tb, p.fs, p.fc, random_bits(create_random(1).front(), p.bits), make_signal);
 }
 inline std::vector<double> generate_bfsk_double(const BfskParams &p)
 {

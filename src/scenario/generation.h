@@ -15,7 +15,7 @@ void generation(const Config &conf)
 
     auto keys = generate_modulation_keys(conf);
 
-    GnuplotLineParams plot;
+    GnuplotParams plot;
 
     plot.title = "source";
     plot.lines = {

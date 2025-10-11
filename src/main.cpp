@@ -15,13 +15,22 @@ int main(int argc, char *argv[])
         auto conf = load_config("config.json");
         std::cerr << "Config: " << conf << endl;
 
-        // correlation_fft_scenario(conf);
-        experiment(conf);
-        // single_exp_check(conf);
+        std::string mod = conf["Режим работы"];
+        if (mod == "оценка_задержки")
+            correlation_fft_scenario(conf);
+        else if (mod == "исследование_устойчивости")
+            all_in_one_experiment(conf);
+        else
+            throw std::runtime_error(
+                "Неизвестный режим работы"
+                ", возможные режимы работы: " +
+                conf["Возможные режимы работы"].dump());
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
+        std::cout << RED << "Обнаружена ошибка, детали в log/run.txt"
+                  << RESET << std::endl;
     }
 
     return 0;

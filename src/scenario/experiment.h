@@ -13,7 +13,6 @@
 
 double single_experiment(
     std::mt19937 &gen,
-    const size_t &bits_len,
     const std::string &mod,
     const Ask2Params &mp,
     const CuttingParams &cp,
@@ -25,9 +24,9 @@ double single_experiment(
     std::vector<cmplx> &corr,
     std::vector<double> &corr_abs)
 {
-    std::string bits = random_bits(gen, bits_len);
+    std::string bits = random_bits(gen, mp.bits);
     apply_modulation_exp(mod, mp.Tb, mp.fs, mp.fc, mp.A0, mp.A1, bits, src);
-    auto trg_size = apply_cut(src, trg, mp.Tb, mp.fs, bits_len, cp.begin, cp.end);
+    auto trg_size = apply_cut(src, trg, mp.Tb, mp.fs, mp.bits, cp.begin, cp.end);
 
     apply_white_noise_raw(src, noise_source, src_size);
     apply_white_noise_raw(trg, noise_target, trg_size);
@@ -44,7 +43,6 @@ double single_experiment(
 
 void serial_experiment(
     std::mt19937 &gen,
-    const size_t &bits_len,
     const std::string &mod,
     const Ask2Params &mp,
     const CuttingParams &cp,
@@ -53,7 +51,7 @@ void serial_experiment(
     const size_t &exp_num,
     double &serial_exp_result)
 {
-    size_t src_size = bits_len * mp.Tb * mp.fs;
+    size_t src_size = mp.bits / mp.Tb * mp.fs;
     size_t corr_size = next_power_of_two(src_size);
     std::vector<cmplx> src(corr_size, cmplx{});
     std::vector<cmplx> trg(corr_size, cmplx{});
@@ -64,7 +62,7 @@ void serial_experiment(
     for (size_t i = 0; i < exp_num; ++i)
     {
         double res = single_experiment(
-            gen, bits_len, mod, mp, cp, noise_source, noise_target, src_size, src, trg, corr, corr_abs);
+            gen, mod, mp, cp, noise_source, noise_target, src_size, src, trg, corr, corr_abs);
         double diff = fabs(res - cp.begin);
 
 #ifdef LOG
@@ -73,7 +71,7 @@ void serial_experiment(
             << ", begin: " << cp.begin
             << ", diff: " << diff << std::endl;
 #endif
-        if (diff < mp.Tb)
+        if (diff < 1. / mp.Tb)
             ++count;
     }
     serial_exp_result = double(count) / double(exp_num);
@@ -84,10 +82,13 @@ void serial_experiment(
 #endif
 }
 
-void experiment(const Config &conf)
+std::vector<double> experiment(const Config &conf)
 {
+
     ExperimentParams exp_p = conf;
     SourceParams src_p = conf;
+
+    std::cout << YELLOW << "Эксперимент начат для модуляции " << src_p.mod << RESET << std::endl;
 
     auto generators = create_random(exp_p.threads);
 
@@ -103,9 +104,9 @@ void experiment(const Config &conf)
     {
         while (active_thread_count == exp_p.threads)
         {
-            std::cout << "\rCurrent progress: " << (100. * float(completed_thread_count) / float(exp_p.noise_levels))
-                      << "% (" << completed_thread_count << " of " << exp_p.noise_levels << ")"
-                      << ", active_threads: " << active_thread_count << std::flush;
+            std::cout << "\rТекущий прогресс: " << (100. * float(completed_thread_count) / float(exp_p.noise_levels))
+                      << "% (" << completed_thread_count << " из " << exp_p.noise_levels << ")"
+                      << ", активные потоки: " << active_thread_count << std::flush;
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
 
@@ -120,7 +121,6 @@ void experiment(const Config &conf)
             {
                 serial_experiment(
                     generators[thread_count % exp_p.threads],
-                    exp_p.bits_len,
                     src_p.mod,
                     conf,
                     conf,
@@ -135,79 +135,48 @@ void experiment(const Config &conf)
 
     while (active_thread_count > 0)
     {
-        std::cout << "\rCurrent progress: " << (100. * float(completed_thread_count) / float(exp_p.noise_levels))
-                  << "% (" << completed_thread_count << " of " << exp_p.noise_levels << ")"
-                  << ", active_threads: " << active_thread_count << std::flush;
+        std::cout << "\rТекущий прогресс: " << (100. * float(completed_thread_count) / float(exp_p.noise_levels))
+                  << "% (" << completed_thread_count << " из " << exp_p.noise_levels << ")"
+                  << ", активные потоки: " << active_thread_count << std::flush;
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
     for (auto &item : free_list)
         item.join();
 
-    std::cout << GREEN << "\nExperiment is done\n"
-              << RESET;
-
-    print_vector(exp_result, "log/exp_result.txt");
-
-    auto exp_result_l = nline(ranged_keys(exp_result.size(), exp_p.noise_min, exp_p.noise_max), exp_result);
-
-    GnuplotLineParams p;
-    p.title = "experiment result: " + src_p.mod;
-    p.x_label = "noise, dB";
-    p.y_label = "p";
-    p.lines = {exp_result_l};
-    draw_plot(p);
+    std::cout << YELLOW << "\nЭксперимент завершен для модуляции " << src_p.mod << RESET << std::endl;
+    return exp_result;
 }
 
-void single_exp_check(const Config &conf)
+void all_in_one_experiment(const Config &conf)
 {
-    auto rnd = create_random(1);
+    Config new_conf = conf;
+
+    new_conf["Опорный сигнал"]["Тип модуляции"] = "bpsk";
+    auto bpsk_res = experiment(new_conf);
+
+    new_conf["Опорный сигнал"]["Тип модуляции"] = "bfsk";
+    auto bfsk_res = experiment(new_conf);
+
+    new_conf["Опорный сигнал"]["Тип модуляции"] = "ask2";
+    auto ask2_res = experiment(new_conf);
+
+    std::cout
+        << GREEN << "\nЭксперимент завершен\n"
+        << RESET;
 
     ExperimentParams exp_p = conf;
-    Ask2Params mp = conf;
-    CuttingParams cp = conf;
+    auto keys = ranged_keys(exp_p.noise_levels, exp_p.noise_min, exp_p.noise_max);
 
-    size_t src_size = exp_p.bits_len * mp.Tb * mp.fs;
-    size_t corr_size = next_power_of_two(src_size);
-    std::vector<cmplx> src(corr_size, cmplx{});
-    std::vector<cmplx> trg(corr_size, cmplx{});
-    std::vector<cmplx> corr(corr_size, cmplx{});
-    std::vector<double> corr_abs(corr_size, double{});
+    auto bpsk_l = line("bpsk", keys, bpsk_res);
+    auto bfsk_l = line("bfsk", keys, bfsk_res);
+    auto ask2_l = line("ask2", keys, ask2_res);
 
-    // for (int i = 0; i < 2; ++i)
-    // {
-    //     single_experiment(
-    //         rnd.front(),
-    //         20,
-    //         "bpsk",
-    //         conf,
-    //         conf,
-    //         10,
-    //         0,
-    //         src_size,
-    //         src,
-    //         trg,
-    //         corr,
-    //         corr_abs);
-    // }
-
-    for (size_t i = 0; i < corr_size; ++i)
-    {
-        src[i] = cmplx(rand(), rand());
-        trg[i] = cmplx(rand(), rand());
-        corr[i] = cmplx(rand(), rand());
-        corr_abs[i] = rand();
-    }
-
-    apply_modulation_exp("ask2", mp.Tb, mp.fs, mp.fc, mp.A0, mp.A1, random_bits(rnd.front(), exp_p.bits_len), src);
-    auto trg_size = apply_cut(src, trg, mp.Tb, mp.fs, exp_p.bits_len, cp.begin, cp.end);
-
-    apply_white_noise_raw(trg, 10, trg_size);
-
-    auto corr_l = nline(autokeys(trg), trg);
-    GnuplotLineParams p;
-    // p.title = "corr: " + std::to_string(correlation_key(1. / mp.fs, 0, max_id(corr_abs)));
-    p.title = "single_exp_check";
-    p.lines = {corr_l};
+    GnuplotParams p;
+    p.title = "Результат эксперимента для 3 типов модуляции";
+    p.x_label = "Уровень шума, дБ";
+    p.y_label = "Вероятность ошибки";
+    p.lines = {bpsk_l, bfsk_l, ask2_l};
     draw_plot(p);
+    show_pic(p.title);
 }

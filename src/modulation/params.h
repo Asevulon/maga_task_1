@@ -8,15 +8,15 @@ public:
     ModulationParams() {}
     ModulationParams(const Config &conf)
     {
-        auto mod = conf["modulation"];
+        auto mod = conf["Опорный сигнал"];
 
-        bits = mod["bits"].get<std::string>();
-        fc = mod["fc"].get<double>();
-        Tb = mod["Tb"].get<double>();
-        fs = mod["fs"].get<double>();
+        bits = mod["Число бит в сигнале"].get<size_t>();
+        fc = 1000. * mod["Несущая частота, кГц"].get<double>();
+        Tb = mod["Битовая скорость, бит/с"].get<double>();
+        fs = 1000. * mod["Частота дискретизации, кГЦ"].get<double>();
     }
 
-    std::string bits;
+    size_t bits = 0;
     double fc = 0;
     double Tb = 0;
     double fs = 0;
@@ -45,10 +45,10 @@ public:
     Ask2Params(const Config &conf)
         : ModulationParams(conf)
     {
-        auto ask2 = conf["modulation"]["ask2"];
+        auto ask2 = conf["Опорный сигнал"]["Модуляция ask2"];
 
-        A0 = ask2["A0"].get<double>();
-        A1 = ask2["A1"].get<double>();
+        A0 = ask2["Уровень для 0"].get<double>();
+        A1 = ask2["Уровень для 1"].get<double>();
     }
 
     double A0 = 0;

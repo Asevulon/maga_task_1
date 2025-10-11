@@ -2,9 +2,16 @@
 
 #include <iostream>
 
+inline std::runtime_error modulation_type_error(const Config &conf)
+{
+    return std::runtime_error(
+        "Неизвестный тип модуляции, возможные типы модуляции:" +
+        conf.dump());
+}
+
 std::vector<double> generate_modulation_keys(const ModulationParams p)
 {
-    size_t size = p.bits.size() * p.Tb * p.fs;
+    size_t size = p.bits / p.Tb * p.fs;
     std::vector<double> res;
     res.resize(size);
     double dt = 1. / p.fs;
@@ -28,7 +35,7 @@ std::vector<double> modulation(const Config &conf)
     if (p.mod == "ask2")
         return generate_ask2_double(conf);
 
-    throw std::runtime_error("unknown modulation mode");
+    throw modulation_type_error(conf);
 }
 
 std::vector<cmplx> modulation_cmplx(const Config &conf)
@@ -44,28 +51,7 @@ std::vector<cmplx> modulation_cmplx(const Config &conf)
     if (p.mod == "ask2")
         return generate_ask2_cmplx(conf);
 
-    throw std::runtime_error("unknown modulation mode");
-}
-
-std::vector<cmplx> modulation_exp(
-    const std::string &mod,
-    const double &Tb,
-    const double &fs,
-    const double &fc,
-    const double &A0,
-    const double &A1,
-    const std::string &bits)
-{
-    if (mod == "bpsk")
-        return generate_bpsk<cmplx>(Tb, fs, fc, bits, make_signal_cmplx);
-
-    if (mod == "bfsk")
-        return generate_bfsk<cmplx>(Tb, fs, fc, bits, make_signal_cmplx);
-
-    if (mod == "ask2")
-        return generate_ask2<cmplx>(Tb, fs, fc, A0, A1, bits, make_signal_cmplx);
-
-    throw std::runtime_error("unknown modulation mode");
+    throw modulation_type_error(conf);
 }
 
 void apply_modulation_exp(
@@ -93,5 +79,5 @@ void apply_modulation_exp(
         apply_ask2<cmplx>(trg, Tb, fs, fc, A0, A1, bits, make_signal_cmplx);
         return;
     }
-    throw std::runtime_error("unknown modulation mode");
+    throw std::runtime_error("Неизвестный тип модуляции");
 }

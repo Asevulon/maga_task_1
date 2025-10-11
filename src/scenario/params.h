@@ -8,7 +8,7 @@ public:
     SignalParams() {}
     SignalParams(const Config &conf)
     {
-        noise = conf["noise"];
+        noise = conf["Уровень шума, дБ"];
     }
 
     double noise = 0;
@@ -19,11 +19,11 @@ class SourceParams : public SignalParams
 public:
     SourceParams() {};
     SourceParams(const Config &conf)
-        : SignalParams(conf["source"])
+        : SignalParams(conf["Опорный сигнал"])
     {
-        auto source = conf["source"];
+        auto source = conf["Опорный сигнал"];
 
-        mod = source["mod"];
+        mod = source["Тип модуляции"];
     }
 
     std::string mod{};
@@ -34,12 +34,12 @@ class TargetParams : public SignalParams
 public:
     TargetParams() {};
     TargetParams(const Config &conf)
-        : SignalParams(conf["target"])
+        : SignalParams(conf["Исследуемый сигнал"])
     {
-        auto target = conf["target"];
+        auto target = conf["Исследуемый сигнал"];
 
-        begin = target["begin"];
-        end = target["end"];
+        begin = target["Начало, мс"].get<double>() / 1000.;
+        end = target["Конец, мс"].get<double>() / 1000.;
     }
 
     double begin = 0;
@@ -52,18 +52,16 @@ public:
     ExperimentParams() {};
     ExperimentParams(const Config &conf)
     {
-        auto exp = conf["experiment"];
-        noise_max = exp["noise_max"];
-        noise_min = exp["noise_min"];
-        noise_levels = exp["noise_levels"];
-        experiments_per_level = exp["experiment_per_level"];
-        bits_len = exp["bits_len"];
-        threads = exp["threads"];
+        auto exp = conf["Параметры исследования устойчивости алгоритма"];
+        noise_max = exp["Конечный уровень шума, дБ"];
+        noise_min = exp["Начальный уровень шума, дБ"];
+        noise_levels = exp["Количество шагов по шуму"];
+        experiments_per_level = exp["Число повторений эксперимента"];
+        threads = exp["Число потоков"];
     }
     double noise_max = 0;
     double noise_min = 0;
     uint64_t noise_levels = 0;
     uint64_t experiments_per_level = 0;
-    size_t bits_len = 0;
     uint64_t threads = 0;
 };

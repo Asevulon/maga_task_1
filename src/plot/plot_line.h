@@ -9,8 +9,8 @@ typedef std::vector<GnuplotLine> GnuplotLineCmplx;
 inline GnuplotLineCmplx line(const std::string &name, const std::vector<double> &keys, const std::vector<cmplx> &src)
 {
     return GnuplotLineCmplx{
-        {name + "_re", merge(keys, cmplx_re(src))},
-        {name + "_im", merge(keys, cmplx_im(src))}};
+        {name + " (re)", merge(keys, cmplx_re(src))},
+        {name + " (im)", merge(keys, cmplx_im(src))}};
 }
 inline GnuplotLine line(const std::string &name, const std::vector<double> &keys, const std::vector<double> &src)
 {
