@@ -90,16 +90,15 @@ void correlation_fft_scenario(const Config &conf)
     auto src_keys = generate_modulation_keys(conf);
     auto trg_keys = cut(src_keys, conf);
 
-    size_t corr_size = next_power_of_two(src_n.size() + trg_n.size() - 1);
+    // size_t corr_size = next_power_of_two(src_n.size() + trg_n.size() - 1);
+    size_t corr_size = next_power_of_two(src.size());
     std::vector<cmplx> corr(corr_size, cmplx());
     zero_extention(src_n, corr_size);
     zero_extention(trg_n, corr_size);
     correlation_fft(src_n, trg_n, corr);
-
     auto corr_abs = abs(corr);
-    auto corr_keys = correlation_keys(src_n.size(), trg_n.size(), conf["modulation"]["fs"].get<double>(), trg_keys.front() - trg_keys.back());
 
-    double corr_max = milliseconds(corr_keys[max_id(corr_abs)]);
+    double corr_max = milliseconds(src_keys[max_id(corr_abs)]);
     double error_rate = milliseconds(conf["modulation"]["Tb"]);
     double init_value = milliseconds(conf["target"]["begin"]);
     double diff = fabs(corr_max - init_value);
@@ -133,7 +132,7 @@ void correlation_fft_scenario(const Config &conf)
     auto trg_l = nline(trg_keys, trg);
     auto src_n_l = nline(src_keys, src_n);
     auto trg_n_l = nline(trg_keys, trg_n);
-    auto corr_abs_l = nline(corr_keys, corr_abs);
+    auto corr_abs_l = nline(src_keys, corr_abs);
 
     p.title = "исходный";
     p.lines = {src_l};

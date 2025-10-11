@@ -44,6 +44,31 @@ inline std::vector<T> cut(
     size_t end_idx = end / total_time * size;
     return std::vector<T>(src.begin() + begin_idx, src.begin() + end_idx);
 }
+template <typename T>
+inline size_t apply_cut(
+    const std::vector<T> &src,
+    std::vector<T> &trg,
+    const double &Tb,
+    const double &fs,
+    const size_t &bits_len,
+    const double &begin,
+    const double &end)
+{
+    double total_time = Tb * bits_len;
+    size_t size = total_time * fs;
+    size_t begin_idx = begin / total_time * size;
+    size_t end_idx = end / total_time * size;
+    size_t trg_size = end_idx - begin_idx;
+    if (trg.size() < trg_size)
+        trg.resize(trg_size);
+    for (size_t i = begin_idx; i < end_idx; ++i)
+    {
+        trg[i - begin_idx] = src[i];
+    }
+    for (size_t i = trg_size; i < trg.size(); ++i)
+        trg[i] = T{};
+    return trg_size;
+}
 
 template <typename T>
 inline size_t max_id(const std::vector<T> &src)

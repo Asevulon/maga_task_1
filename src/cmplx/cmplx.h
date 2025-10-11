@@ -20,13 +20,13 @@ public:
         re = x;
         im = y;
     }
-    cmplx &operator=(cmplx &c)
+    cmplx &operator=(const cmplx &c)
     {
         re = c.re;
         im = c.im;
         return *this;
     }
-    cmplx &operator=(cmplx &&c)
+    cmplx &operator=(const cmplx &&c)
     {
         re = c.re;
         im = c.im;
@@ -129,4 +129,14 @@ inline std::vector<double> abs(const std::vector<cmplx> &src)
     for (const auto &x : src)
         res.emplace_back(abs(x));
     return res;
+}
+inline void apply_abs(const std::vector<cmplx> &src, std::vector<double> &res)
+{
+    size_t size = src.size();
+    if (res.size() < size)
+        res.resize(size);
+    for (size_t i = 0; i < size; ++i)
+    {
+        res[i] = abs(src[i]);
+    }
 }

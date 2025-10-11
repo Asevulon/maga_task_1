@@ -14,6 +14,9 @@ fi
 BUILD_PATH="build"
 BUILD_PATH_TYPED="${BUILD_PATH}/${BUILD_TYPE}"
 PARALLEL=4
+LOG_PATH="log"
+BUILD_LOG_NAME="build.txt"
+RUN_LOG_NAME="run.txt"
 
 
 
@@ -40,7 +43,7 @@ build(){
 
 run(){
     TARGET=$1
-    echo -e "\nRunning target ${TARGET}\n"
+    echo -e "\nRunning ${TARGET}\n"
     echo $LINE
     echo ""
     $TARGET
@@ -49,9 +52,11 @@ run(){
     echo -e "\nDone\n"
 }
 
+mkdir -p $PLOT_PATH
+mkdir -p $PLOT_DATA_PATH
+mkdir -p $LOG_PATH
+
+# build &>"${LOG_PATH}/${BUILD_LOG_NAME}"
+# run "${BUILD_PATH_TYPED}/Task1" 2>"${LOG_PATH}/${RUN_LOG_NAME}"
 build
-
-clear $PLOT_PATH
-clear $PLOT_DATA_PATH
-
 run "${BUILD_PATH_TYPED}/Task1"

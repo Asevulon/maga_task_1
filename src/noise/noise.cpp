@@ -47,9 +47,8 @@ std::vector<cmplx> apply_white_noise(std::vector<cmplx> &target, const NoisePara
     return res;
 }
 
-void apply_white_noise_raw(std::vector<cmplx> &target, const double &pn)
+void apply_white_noise_raw(std::vector<cmplx> &target, const double &pn, const size_t &size)
 {
-    size_t size = target.size();
     std::vector<cmplx> n;
     n.reserve(size);
     for (size_t i = 0; i < size; ++i)

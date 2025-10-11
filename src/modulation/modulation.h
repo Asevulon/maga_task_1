@@ -16,3 +16,12 @@ std::vector<cmplx> modulation_exp(
     const double &A0,
     const double &A1,
     const std::string &bits);
+void apply_modulation_exp(
+    const std::string &mod,
+    const double &Tb,
+    const double &fs,
+    const double &fc,
+    const double &A0,
+    const double &A1,
+    const std::string &bits,
+    std::vector<cmplx> &trg);

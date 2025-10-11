@@ -14,6 +14,7 @@ set ylabel y_label
 set grid
 set key outside top left
 set termoption noenhanced
+set offsets 0, 0, 0.1, 0.1 
 
 number_of_files = words(datafile)
 

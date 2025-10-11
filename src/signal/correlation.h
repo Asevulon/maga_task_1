@@ -65,7 +65,7 @@ inline void correlation_fft(std::vector<cmplx> &x, std::vector<cmplx> &y, std::v
     size_t size = x.size();
     for (size_t i = 0; i < size; ++i)
     {
-        r[i] = conj(x[i]) * y[i];
+        r[i] = x[i] * conj(y[i]);
     }
     fourea(r, 1);
 }

@@ -2,9 +2,9 @@
     "modulation":
     {
         "bits":"1100100110010101010001",
-        "fc":5000,
+        "fc":4000,
         "fs":10000,
-        "Tb":0.01,
+        "Tb":0.0004,
         "ask2":
         {
             "A0":0.25,
@@ -19,16 +19,16 @@
     "target":
     {
         "begin":0.05,
-        "end":0.12,
+        "end":0.45,
         "noise":0
     },
     "experiment":
     {
         "noise_max":0,
         "noise_min":-30,
-        "noise_levels":100,
-        "experiment_per_level":1000,
-        "bits_len":20,
+        "noise_levels":50,
+        "experiment_per_level":100,
+        "bits_len":2500,
         "threads":8
     }    
 }

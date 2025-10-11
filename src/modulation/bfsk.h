@@ -7,19 +7,20 @@
 #include "modulation/make_signal.h"
 
 template <typename T>
-std::vector<T> generate_bfsk(
+std::vector<T> &apply_bfsk(
+    std::vector<T> &res,
     double Tb,
     double fs,
     double fc,
     const std::string &bits,
     const std::function<T(double)> &make_signal)
 {
-    std::vector<T> res;
 
     size_t size_per_bit = Tb * fs;
     size_t size = bits.size() * size_per_bit;
 
-    res.reserve(size);
+    if (res.size() < size)
+        res.resize(size);
 
     double df = 1. / (2. * Tb);
     double p_step_0 = Pi2 * (fc - df) / fs;
@@ -28,20 +29,38 @@ std::vector<T> generate_bfsk(
     double phase = 0;
     double d_phase = 0;
 
-    for (const auto &c : bits)
+    for (size_t j = 0; j < bits.size(); ++j)
     {
-        d_phase = (c - '0') ? p_step_1 : p_step_0;
+        d_phase = (bits[j] - '0') ? p_step_1 : p_step_0;
+        size_t offset = j * size_per_bit;
         for (uint64_t i = 0; i < size_per_bit; ++i)
         {
             if (phase > Pi2)
                 phase -= Pi2;
-            res.emplace_back(make_signal(phase));
+            res[offset + i] = make_signal(phase);
             phase += d_phase;
         }
+    }
+
+    if (res.size() > size)
+    {
+        for (size_t i = size; i < res.size(); ++i)
+            res[i] = T{};
     }
     return res;
 }
 
+template <typename T>
+inline std::vector<T> generate_bfsk(
+    double Tb,
+    double fs,
+    double fc,
+    const std::string &bits,
+    const std::function<T(double)> &make_signal)
+{
+    std::vector<T> res;
+    return apply_bfsk(res, Tb, fs, fc, bits, make_signal);
+}
 template <typename T>
 inline std::vector<T> generate_bfsk(const BfskParams &p, const std::function<T(double)> &make_signal)
 {

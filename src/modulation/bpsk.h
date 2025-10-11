@@ -9,7 +9,47 @@
 #include "modulation/make_signal.h"
 
 template <typename T>
-std::vector<T> generate_bpsk(
+std::vector<T> &apply_bpsk(
+    std::vector<T> &res,
+    double Tb,
+    double fs,
+    double fc,
+    const std::string &bits,
+    const std::function<T(double)> &make_signal)
+{
+
+    size_t size_per_bit = Tb * fs;
+    size_t size = bits.size() * size_per_bit;
+
+    if (res.size() < size)
+        res.resize(size);
+
+    double phase = 0;
+    double p_step = Pi2 * fc / fs;
+
+    for (size_t j = 0; j < bits.size(); ++j)
+    {
+        phase += (bits[j] - '0') ? Pi : 0;
+        size_t offset = j * size_per_bit;
+        for (uint64_t i = 0; i < size_per_bit; ++i)
+        {
+            if (phase > Pi2)
+                phase -= Pi2;
+            res[offset + i] = make_signal(phase);
+            phase += p_step;
+        }
+    }
+
+    if (res.size() > size)
+    {
+        for (size_t i = size; i < res.size(); ++i)
+            res[i] = T{};
+    }
+    return res;
+}
+
+template <typename T>
+inline std::vector<T> generate_bpsk(
     double Tb,
     double fs,
     double fc,
@@ -17,29 +57,8 @@ std::vector<T> generate_bpsk(
     const std::function<T(double)> &make_signal)
 {
     std::vector<T> res;
-
-    size_t size_per_bit = Tb * fs;
-    size_t size = bits.size() * size_per_bit;
-
-    res.reserve(size);
-
-    double phase = 0;
-    double p_step = Pi2 * fc / fs;
-
-    for (auto &c : bits)
-    {
-        phase += (c - '0') ? Pi : 0;
-        for (uint64_t i = 0; i < size_per_bit; ++i)
-        {
-            if (phase > Pi2)
-                phase -= Pi2;
-            res.emplace_back(make_signal(phase));
-            phase += p_step;
-        }
-    }
-    return res;
+    return apply_bpsk<T>(res, Tb, fs, fc, bits, make_signal);
 }
-
 template <typename T>
 inline std::vector<T> generate_bpsk(const BpskParams &p, const std::function<T(double)> &make_signal)
 {
